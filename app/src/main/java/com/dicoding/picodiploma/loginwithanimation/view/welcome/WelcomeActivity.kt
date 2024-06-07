@@ -9,21 +9,36 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityWelcomeBinding
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 import com.dicoding.picodiploma.loginwithanimation.view.signup.SignupActivity
+import com.dicoding.picodiploma.loginwithanimation.view.story.story_actifity
 
 class WelcomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWelcomeBinding
+    private lateinit var sharedpreferencetoken: sharedpreferencetoken
+    private var token : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedpreferencetoken = sharedpreferencetoken(this)
+        token = sharedpreferencetoken.getToken()
+        cekToken()
+    }
+    private fun cekToken() {
+        if (!token.isNullOrEmpty()){
+            startActivity(Intent(this@WelcomeActivity, story_actifity::class.java))
+            finish()
+        }
+        else{
+            setupView()
+            setupAction()
+            playAnimation()
 
-        setupView()
-        setupAction()
-        playAnimation()
+        }
     }
 
     private fun setupView() {

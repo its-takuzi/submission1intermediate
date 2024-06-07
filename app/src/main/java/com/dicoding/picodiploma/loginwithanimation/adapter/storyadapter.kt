@@ -41,8 +41,7 @@ class storyadapter() : ListAdapter<ListStoryItem, storyadapter.MyViewHolder>(DIF
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): storyadapter.MyViewHolder {
-      val binding =
-          ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+      val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
     }
 
@@ -50,7 +49,7 @@ class storyadapter() : ListAdapter<ListStoryItem, storyadapter.MyViewHolder>(DIF
         val story = getItem(position)
         holder.bind(story)
         holder.itemView.setOnClickListener {
-            onItemClickCallback?.onItemClicked(story!!)
+            onItemClickCallback.onItemClicked(story!!)
         }
     }
 

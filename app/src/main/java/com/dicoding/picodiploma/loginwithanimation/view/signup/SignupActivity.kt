@@ -64,6 +64,10 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
+
+
+
+
     private fun showLoading(state : Boolean){
         if(state){
             binding.pbProgressBar.visibility = View.VISIBLE

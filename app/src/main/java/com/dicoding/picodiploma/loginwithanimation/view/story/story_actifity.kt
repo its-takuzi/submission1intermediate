@@ -1,5 +1,6 @@
 package com.dicoding.picodiploma.loginwithanimation.view.story
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,15 +17,18 @@ import com.dicoding.picodiploma.loginwithanimation.adapter.storyadapter
 import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityStoryActifityBinding
+import com.dicoding.picodiploma.loginwithanimation.view.Detail_story.Detail_story
 import com.dicoding.picodiploma.loginwithanimation.view.helper.viewmodelfactory
+import org.xml.sax.helpers.ParserAdapter
 
 class story_actifity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryActifityBinding
 
     private lateinit var sharedpreferencetoken: sharedpreferencetoken
     private var token :String? = null
+    private lateinit var adapter : storyadapter
 
-    private lateinit var storyviewmodel: storyviewmodel
+    private lateinit var sstoryviewmodel: storyviewmodel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,22 +45,19 @@ class story_actifity : AppCompatActivity() {
                 }
             }
         })
-
         val layoutManager = LinearLayoutManager(this)
         binding.rvStory.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(this,layoutManager.orientation)
+
         binding.rvStory.addItemDecoration(itemDecoration)
-
-
         val factory = viewmodelfactory.getInstance(application)
-        storyviewmodel = ViewModelProvider(this,factory)[storyviewmodel::class.java]
+        sstoryviewmodel = ViewModelProvider(this,factory)[storyviewmodel::class.java]
 
-
-        storyviewmodel.story.observe(this){story ->
+       sstoryviewmodel.story.observe(this){story ->
             setContent(story)
             sharedpreferencetoken
         }
-        storyviewmodel.isloading.observe(this){
+        sstoryviewmodel.isloading.observe(this){
             showLoading(it)
         }
 
@@ -71,6 +72,8 @@ class story_actifity : AppCompatActivity() {
         }
     }
 
+
+
     private fun setContent(story: List<ListStoryItem>?) {
         Log.d("HomeActivity", "Received ${story?.size} items from ViewModel")
         val adapter = storyadapter()
@@ -79,9 +82,14 @@ class story_actifity : AppCompatActivity() {
         sharedpreferencetoken
         adapter.setOnClickCallBack(object : storyadapter.OnItemClickCallback{
             override fun onItemClicked(data: ListStoryItem) {
-                Toast.makeText(this@story_actifity, "clicked", Toast.LENGTH_SHORT).show()
-            }
+                val intent = Intent(this@story_actifity, Detail_story::class.java)
+                intent.putExtra(Detail_story.EXTRA_USERNAME, data.name)
+                intent.putExtra(Detail_story.EXTRA_IMAGE, data.photoUrl)
+                intent.putExtra(Detail_story.EXTRA_DESKRIPSI, data.description)
+                intent.putExtra(Detail_story.EXTRA_DATE, data.createdAt)
 
+                startActivity(intent)
+            }
         })
     }
 

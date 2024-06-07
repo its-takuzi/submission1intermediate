@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginWithAnimation">
         <activity
+            android:name=".view.Detail_story.Detail_story"
+            android:exported="false" />
+        <activity
             android:name=".view.story.story_actifity"
             android:exported="false" />
         <activity

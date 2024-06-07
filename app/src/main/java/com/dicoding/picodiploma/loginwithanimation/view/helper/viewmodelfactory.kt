@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.view.story.story_actifity
 import com.dicoding.picodiploma.loginwithanimation.view.story.storyviewmodel
-import com.google.android.ads.mediationtestsuite.viewmodels.ViewModelFactory
 
 class viewmodelfactory private constructor(private val mApplication: Application) : ViewModelProvider.NewInstanceFactory() {
     companion object {
@@ -15,7 +14,7 @@ class viewmodelfactory private constructor(private val mApplication: Application
         @JvmStatic
         fun getInstance(application: Application): viewmodelfactory {
             if (INSTANCE == null) {
-                synchronized(ViewModelFactory::class.java) {
+                synchronized(viewmodelfactory::class.java) {
                     INSTANCE = viewmodelfactory(application)
                 }
             }
@@ -25,7 +24,7 @@ class viewmodelfactory private constructor(private val mApplication: Application
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(story_actifity::class.java)) {
+        if (modelClass.isAssignableFrom(storyviewmodel::class.java)) {
             return storyviewmodel(mApplication) as T }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

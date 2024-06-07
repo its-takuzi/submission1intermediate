@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.data.response.Login
 import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityLoginBinding
-import com.dicoding.picodiploma.loginwithanimation.view.main.MainActivity
 import com.dicoding.picodiploma.loginwithanimation.view.signup.SignupActivity
+import com.dicoding.picodiploma.loginwithanimation.view.story.story_actifity
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
                     if (!response.error){
                         showLoading(false)
                         sharedpreferencetoken.saveToken(response.loginResult.token, response.loginResult.name, email.text.toString())
-                        startActivity(Intent(this, SignupActivity::class.java))
+                        startActivity(Intent(this, story_actifity::class.java))
                         finish()
                     } else {
                         showLoading(false)
