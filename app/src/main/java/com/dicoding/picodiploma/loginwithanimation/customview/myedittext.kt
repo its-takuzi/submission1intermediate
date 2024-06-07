@@ -25,7 +25,7 @@ class myedittext : AppCompatEditText {
         defStyleAttr
     )
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
         val layoutParams = layoutParams

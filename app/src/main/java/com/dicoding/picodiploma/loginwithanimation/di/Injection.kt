@@ -1,13 +1,11 @@
-package com.dicoding.picodiploma.loginwithanimation.di
+/*package com.dicoding.picodiploma.loginwithanimation.di
 
-/*
 import android.content.Context
-import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
-import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 
-object Injection {
-    fun provideRepository(context: Context): UserRepository {
-        val pref = UserPreference.getInstance(context.dataStore)
-        return UserRepository.getInstance(pref)
-    }
+object Injection {   fun provideRepository(context: Context): StoryRepository {
+    val pref = UserPreference.getInstance(context.dataStore)
+    val user = runBlocking { pref.getUser().first() }
+    val apiService = ApiConfig.getApiService(user.token)
+    return StoryRepository.getInstance(apiService, pref)
+}
 }*/
