@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.dicoding.picodiploma.loginwithanimation"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.dicoding.picodiploma.loginwithanimation"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -57,4 +57,8 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.15.1")
 
+    implementation("io.coil-kt:coil:2.6.0")
+    implementation ("com.google.code.gson:gson:2.11.0")
+
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
 }

@@ -3,6 +3,9 @@ package com.dicoding.picodiploma.loginwithanimation.data.retrofit
 import com.dicoding.picodiploma.loginwithanimation.data.response.LoginResponse
 import com.dicoding.picodiploma.loginwithanimation.data.response.RegisterResponse
 import com.dicoding.picodiploma.loginwithanimation.data.response.StoryListResponse
+import com.dicoding.picodiploma.loginwithanimation.data.response.UploadResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -28,5 +31,13 @@ interface ApiService {
     fun getStories(
         @Header("Authorization") token: String
     ):Call<StoryListResponse>
+
+    @Multipart
+    @POST("stories")
+    suspend fun uploadImage(
+        @Header("Authorization")token :String,
+        @Part file: MultipartBody.Part,
+        @Part("description") description: RequestBody,
+    ): UploadResponse
 
 }

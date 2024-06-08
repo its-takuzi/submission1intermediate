@@ -30,7 +30,7 @@ class storyviewmodel(application: Application) : ViewModel(){
         showStory(token)
     }
 
-    private fun showStory(token: String?) {
+    fun showStory(token: String?) {
         _isloading.value = true
         val client = ApiConfig.getApiService().getStories("Bearer $token")
         client.enqueue(object : Callback<StoryListResponse> {

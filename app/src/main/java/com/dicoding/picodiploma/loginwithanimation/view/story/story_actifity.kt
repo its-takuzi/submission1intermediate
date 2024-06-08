@@ -13,12 +13,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.adapter.storyadapter
 import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityStoryActifityBinding
 import com.dicoding.picodiploma.loginwithanimation.view.Detail_story.Detail_story
 import com.dicoding.picodiploma.loginwithanimation.view.helper.viewmodelfactory
+import com.dicoding.picodiploma.loginwithanimation.view.upload.Upload_story
+import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 import org.xml.sax.helpers.ParserAdapter
 
 class story_actifity : AppCompatActivity() {
@@ -61,6 +64,24 @@ class story_actifity : AppCompatActivity() {
             showLoading(it)
         }
 
+        binding.fabAdd.setOnClickListener{
+            startActivity(Intent(this@story_actifity, Upload_story::class.java))
+        }
+
+        binding.topAppBar.setOnMenuItemClickListener {menuItem->
+            when (menuItem.itemId){
+                R.id.logOut ->{
+                    val intent = Intent(this@story_actifity , WelcomeActivity::class.java)
+                    sharedpreferencetoken.clearData()
+                    startActivity(intent)
+                    finish()
+
+                    true
+                }else ->{
+                false
+            }
+            }
+        }
     }
 
     private fun showLoading(isloading: Boolean?) {
@@ -92,7 +113,10 @@ class story_actifity : AppCompatActivity() {
             }
         })
     }
-
+    override fun onResume() {
+        super.onResume()
+        sstoryviewmodel.showStory(token)
+    }
 
     private fun setupView() {
         @Suppress("DEPRECATION")

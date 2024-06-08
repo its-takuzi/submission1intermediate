@@ -13,14 +13,14 @@ import kotlin.collections.ArrayList
 
 class storyadapter() : ListAdapter<ListStoryItem, storyadapter.MyViewHolder>(DIFF_CALLBACK) {
     private lateinit var onItemClickCallback: OnItemClickCallback
-    private val list = ArrayList<ListStoryItem>()
-
     fun setOnClickCallBack(onItemClickCallBack: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallBack
+
     }
 
     interface OnItemClickCallback {
         fun onItemClicked(data: ListStoryItem)
+
     }
     inner class MyViewHolder(val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(story : ListStoryItem?){
@@ -41,7 +41,8 @@ class storyadapter() : ListAdapter<ListStoryItem, storyadapter.MyViewHolder>(DIF
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): storyadapter.MyViewHolder {
-      val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+      val binding =
+          ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
     }
 
