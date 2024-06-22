@@ -1,9 +1,6 @@
 package com.dicoding.picodiploma.loginwithanimation.data.retrofit
 
-import com.dicoding.picodiploma.loginwithanimation.data.response.LoginResponse
-import com.dicoding.picodiploma.loginwithanimation.data.response.RegisterResponse
-import com.dicoding.picodiploma.loginwithanimation.data.response.StoryListResponse
-import com.dicoding.picodiploma.loginwithanimation.data.response.UploadResponse
+import com.dicoding.picodiploma.loginwithanimation.data.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -29,8 +26,10 @@ interface ApiService {
 
     @GET("stories")
     fun getStories(
-        @Header("Authorization") token: String
-    ):Call<StoryListResponse>
+        @Header("Authorization")token :String,
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
+    ): Call<StoryListResponse>
 
     @Multipart
     @POST("stories")
@@ -40,4 +39,8 @@ interface ApiService {
         @Part("description") description: RequestBody,
     ): UploadResponse
 
+    @GET("stories")
+    fun getStoriesWithLocation(
+        @Header("Authorization")token :String,
+    ): Call<StoryListResponse>
 }

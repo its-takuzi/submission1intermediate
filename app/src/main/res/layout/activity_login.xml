@@ -80,7 +80,7 @@
         tools:alpha="100">
 
         <com.dicoding.picodiploma.loginwithanimation.customview.myedittext
-            android:id="@+id/emailEditText"
+            android:id="@+id/inputEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

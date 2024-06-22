@@ -2,6 +2,7 @@ package com.dicoding.picodiploma.loginwithanimation.view.upload
 
 import android.net.Uri
 import android.os.Build
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -80,8 +81,6 @@ class Upload_story : AppCompatActivity() {
             }
         } ?: showToast(getString(R.string.empty_image_warning))
     }
-
-
 
     private fun startCamera() {
         currentImageUri = getImageUri(this)

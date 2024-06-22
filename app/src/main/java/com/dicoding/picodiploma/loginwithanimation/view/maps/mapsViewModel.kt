@@ -1,22 +1,22 @@
-package com.dicoding.picodiploma.loginwithanimation.view.story
+package com.dicoding.picodiploma.loginwithanimation.view.maps
 
 import android.app.Application
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.data.response.StoryListResponse
 import com.dicoding.picodiploma.loginwithanimation.data.retrofit.ApiConfig
 import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class storyviewmodel(application: Application) : ViewModel(){
+
+class mapsViewModel (application: Application) : ViewModel(){
+
     private val sharedpreferencetoken : sharedpreferencetoken = sharedpreferencetoken(application)
     private val _story = MutableLiveData<List<ListStoryItem>>()
     val story : LiveData<List<ListStoryItem>> = _story
@@ -35,7 +35,7 @@ class storyviewmodel(application: Application) : ViewModel(){
 
     fun showStory(token: String?) {
         _isloading.value = true
-        val client = ApiConfig.getApiService().getStories("Bearer $token")
+        val client = ApiConfig.getApiService().getStoriesWithLocation("Bearer $token")
         client.enqueue(object : Callback<StoryListResponse> {
             override fun onResponse(call: Call<StoryListResponse>, response: Response<StoryListResponse>) {
                 _isloading.value = false
@@ -52,5 +52,7 @@ class storyviewmodel(application: Application) : ViewModel(){
             override fun onFailure(call: Call<StoryListResponse>, t: Throwable) {
                 Log.e(TAG, "gagal: ${t.message}" )
             }
-        })    }
+        })
+    }
+
 }

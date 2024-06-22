@@ -44,11 +44,9 @@ class SignupActivity : AppCompatActivity() {
             if (email.text.toString().isEmpty() || password.text.toString().isEmpty() || username.text.toString().isEmpty()){
                 Toast.makeText(this, "pastikan username, email, dan password sudah terisi!", Toast.LENGTH_SHORT).show()
             }
-
             if ( email.isEmailValid && password.isPasswordValid && username.isUsernameValid){
                 showLoading(true)
                     vIewModel.postRegister(Register(username.text.toString(), email.text.toString(), password.text.toString()))
-
                     vIewModel.registerresponse.observe(this){
                         Log.d("TAG", "Hasil Register : $it")
                         if(!it.error!!){

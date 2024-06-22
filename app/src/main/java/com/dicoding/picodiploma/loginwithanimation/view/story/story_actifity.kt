@@ -20,6 +20,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedp
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityStoryActifityBinding
 import com.dicoding.picodiploma.loginwithanimation.view.Detail_story.Detail_story
 import com.dicoding.picodiploma.loginwithanimation.view.helper.viewmodelfactory
+import com.dicoding.picodiploma.loginwithanimation.view.maps.MapsActivity
 import com.dicoding.picodiploma.loginwithanimation.view.upload.Upload_story
 import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 import org.xml.sax.helpers.ParserAdapter
@@ -68,18 +69,24 @@ class story_actifity : AppCompatActivity() {
             startActivity(Intent(this@story_actifity, Upload_story::class.java))
         }
 
-        binding.topAppBar.setOnMenuItemClickListener {menuItem->
-            when (menuItem.itemId){
-                R.id.logOut ->{
-                    val intent = Intent(this@story_actifity , WelcomeActivity::class.java)
+        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.maps -> {
+                    Log.d("MenuClick", "Map menu item clicked")
+                    startActivity(Intent(this, MapsActivity::class.java))
+                    true
+                }
+                R.id.logOut -> {
+                    Log.d("MenuClick", "Log out menu item clicked")
+                    val intent = Intent(this@story_actifity, WelcomeActivity::class.java)
                     sharedpreferencetoken.clearData()
                     startActivity(intent)
                     finish()
-
                     true
-                }else ->{
-                false
-            }
+                }
+                else -> {
+                    false
+                }
             }
         }
     }

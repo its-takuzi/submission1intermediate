@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
         setupView()
-        binding.emailEditText.validateInput(0)
+        binding.inputEmail.validateInput(0)
         binding.passwordEditText.validateInput(1)
         validatelogin()
         playAnimation()
@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun validatelogin() {
         binding.loginButton.setOnClickListener{
-            val email = binding.emailEditText
+            val email = binding.inputEmail
             val password = binding.passwordEditText
 
             if(email.text.toString().isEmpty() || email.text.toString().isEmpty()){

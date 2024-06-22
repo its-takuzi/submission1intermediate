@@ -21,4 +21,7 @@
     <string name="masukkan_teks_deskripsi">Masukkan teks deskripsi</string>
     <string name="upload_story">upload story</string>
     <string name="empty_image_warning">gambar kosong</string>
+    <string name="title_activity_mapsactifity">mapsactifity</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps">maps</string>
 </resources>
