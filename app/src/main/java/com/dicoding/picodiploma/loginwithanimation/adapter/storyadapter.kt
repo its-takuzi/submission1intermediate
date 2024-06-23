@@ -1,4 +1,5 @@
 package com.dicoding.picodiploma.loginwithanimation.adapter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -16,6 +17,7 @@ class storyadapter(private val listener: (ListStoryItem) -> Unit) :
     PagingDataAdapter<ListStoryItem, storyadapter.MyViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
+    private val list = ArrayList<ListStoryItem>()
 
     fun setOnClickCallBack(onItemClickCallBack: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallBack
@@ -52,7 +54,13 @@ class storyadapter(private val listener: (ListStoryItem) -> Unit) :
         val story = getItem(position)
         holder.bind(story)
         holder.itemView.setOnClickListener {
-            story?.let { onItemClickCallback.onItemClicked(it) }
+            story?.let {
+                if (::onItemClickCallback.isInitialized) {
+                    onItemClickCallback.onItemClicked(it)
+                } else {
+                    Log.e("storyadapter", "onItemClickCallback is not initialized")
+                }
+            }
         }
     }
 
@@ -68,4 +76,3 @@ class storyadapter(private val listener: (ListStoryItem) -> Unit) :
         }
     }
 }
-

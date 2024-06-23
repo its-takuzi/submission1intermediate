@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.adapter.storyadapter
+import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityStoryActifityBinding
 import com.dicoding.picodiploma.loginwithanimation.view.Detail_story.Detail_story
@@ -51,16 +52,19 @@ class story_actifity : AppCompatActivity() {
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvStory.addItemDecoration(itemDecoration)
 
-        adapter = storyadapter { storyItem ->
-            val intent = Intent(this@story_actifity, Detail_story::class.java).apply {
-                putExtra(Detail_story.EXTRA_USERNAME, storyItem.name)
-                putExtra(Detail_story.EXTRA_IMAGE, storyItem.photoUrl)
-                putExtra(Detail_story.EXTRA_DESKRIPSI, storyItem.description)
-                putExtra(Detail_story.EXTRA_DATE, storyItem.createdAt)
-            }
-            startActivity(intent)
-        }
+        adapter = storyadapter { }
         binding.rvStory.adapter = adapter
+
+        adapter.setOnClickCallBack(object : storyadapter.OnItemClickCallback {
+            override fun onItemClicked(data: ListStoryItem) {
+                val intent = Intent(this@story_actifity, Detail_story::class.java)
+                intent.putExtra(Detail_story.EXTRA_USERNAME, data.name)
+                intent.putExtra(Detail_story.EXTRA_IMAGE, data.photoUrl)
+                intent.putExtra(Detail_story.EXTRA_DESKRIPSI, data.description)
+                intent.putExtra(Detail_story.EXTRA_DATE, data.createdAt)
+                startActivity(intent)
+            }
+        })
 
         val factory = ViewModelFactory.getInstance(application, token!!)
         sstoryviewmodel = ViewModelProvider(this, factory)[storyviewmodel::class.java]
