@@ -5,14 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMapsBinding
-import com.dicoding.picodiploma.loginwithanimation.view.helper.viewmodelfactory
-import com.dicoding.picodiploma.loginwithanimation.view.story.storyviewmodel
+import com.dicoding.picodiploma.loginwithanimation.view.helper.ViewModelFactory
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -20,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
+import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -27,6 +25,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var viewModel: mapsViewModel
     private val boundBuilder = LatLngBounds.builder()
+    private lateinit var sharedpreferencetoken: sharedpreferencetoken
+    private var token: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +34,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedpreferencetoken = sharedpreferencetoken(this)
+        token = sharedpreferencetoken.getToken()
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        val factory = viewmodelfactory.getInstance(application)
+        val factory = ViewModelFactory.getInstance(application, token!!)
         viewModel = ViewModelProvider(this,factory)[(mapsViewModel::class.java)]
 
         viewModel.story.observe(this){stories ->

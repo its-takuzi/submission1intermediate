@@ -8,7 +8,7 @@ class sharedpreferencetoken (context: Context) {
     private val editor :SharedPreferences.Editor = sharedpreference.edit()
 
     fun saveToken(token : String, name : String, email : String){
-        editor.putString("token", token)
+        editor.putString("token", "Bearer $token")
         editor.putString("username", name)
         editor.putString("email", email)
         editor.apply()

@@ -5,32 +5,28 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.loginwithanimation.R
 import com.dicoding.picodiploma.loginwithanimation.adapter.storyadapter
-import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedpreferencetoken
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityStoryActifityBinding
 import com.dicoding.picodiploma.loginwithanimation.view.Detail_story.Detail_story
-import com.dicoding.picodiploma.loginwithanimation.view.helper.viewmodelfactory
+import com.dicoding.picodiploma.loginwithanimation.view.helper.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.maps.MapsActivity
 import com.dicoding.picodiploma.loginwithanimation.view.upload.Upload_story
 import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
-import org.xml.sax.helpers.ParserAdapter
 
 class story_actifity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryActifityBinding
 
     private lateinit var sharedpreferencetoken: sharedpreferencetoken
-    private var token :String? = null
-    private lateinit var adapter : storyadapter
+    private var token: String? = null
+    private lateinit var adapter: storyadapter
 
     private lateinit var sstoryviewmodel: storyviewmodel
 
@@ -42,30 +38,40 @@ class story_actifity : AppCompatActivity() {
 
         sharedpreferencetoken = sharedpreferencetoken(this)
         token = sharedpreferencetoken.getToken()
-        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (!token.isNullOrEmpty()) {
                     finishAffinity()
                 }
             }
         })
+
         val layoutManager = LinearLayoutManager(this)
         binding.rvStory.layoutManager = layoutManager
-        val itemDecoration = DividerItemDecoration(this,layoutManager.orientation)
-
+        val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvStory.addItemDecoration(itemDecoration)
-        val factory = viewmodelfactory.getInstance(application)
-        sstoryviewmodel = ViewModelProvider(this,factory)[storyviewmodel::class.java]
 
-       sstoryviewmodel.story.observe(this){story ->
-            setContent(story)
-            sharedpreferencetoken
+        adapter = storyadapter { storyItem ->
+            val intent = Intent(this@story_actifity, Detail_story::class.java).apply {
+                putExtra(Detail_story.EXTRA_USERNAME, storyItem.name)
+                putExtra(Detail_story.EXTRA_IMAGE, storyItem.photoUrl)
+                putExtra(Detail_story.EXTRA_DESKRIPSI, storyItem.description)
+                putExtra(Detail_story.EXTRA_DATE, storyItem.createdAt)
+            }
+            startActivity(intent)
         }
-        sstoryviewmodel.isloading.observe(this){
-            showLoading(it)
+        binding.rvStory.adapter = adapter
+
+        val factory = ViewModelFactory.getInstance(application, token!!)
+        sstoryviewmodel = ViewModelProvider(this, factory)[storyviewmodel::class.java]
+
+        token?.let {
+            sstoryviewmodel.getStories(it).observe(this) { pagingData ->
+                adapter.submitData(lifecycle, pagingData)
+            }
         }
 
-        binding.fabAdd.setOnClickListener{
+        binding.fabAdd.setOnClickListener {
             startActivity(Intent(this@story_actifity, Upload_story::class.java))
         }
 
@@ -89,40 +95,6 @@ class story_actifity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun showLoading(isloading: Boolean?) {
-        if (isloading == true) {
-            binding.progresBar.visibility = View.VISIBLE
-
-        } else {
-            binding.progresBar.visibility = View.GONE
-        }
-    }
-
-
-
-    private fun setContent(story: List<ListStoryItem>?) {
-        Log.d("HomeActivity", "Received ${story?.size} items from ViewModel")
-        val adapter = storyadapter()
-        adapter.submitList(story)
-        binding.rvStory.adapter = adapter
-        sharedpreferencetoken
-        adapter.setOnClickCallBack(object : storyadapter.OnItemClickCallback{
-            override fun onItemClicked(data: ListStoryItem) {
-                val intent = Intent(this@story_actifity, Detail_story::class.java)
-                intent.putExtra(Detail_story.EXTRA_USERNAME, data.name)
-                intent.putExtra(Detail_story.EXTRA_IMAGE, data.photoUrl)
-                intent.putExtra(Detail_story.EXTRA_DESKRIPSI, data.description)
-                intent.putExtra(Detail_story.EXTRA_DATE, data.createdAt)
-
-                startActivity(intent)
-            }
-        })
-    }
-    override fun onResume() {
-        super.onResume()
-        sstoryviewmodel.showStory(token)
     }
 
     private fun setupView() {
