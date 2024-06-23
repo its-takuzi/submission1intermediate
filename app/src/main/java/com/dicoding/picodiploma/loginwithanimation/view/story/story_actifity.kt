@@ -1,5 +1,6 @@
 package com.dicoding.picodiploma.loginwithanimation.view.story
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,8 @@ import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,12 +27,12 @@ import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 
 class story_actifity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryActifityBinding
-
     private lateinit var sharedpreferencetoken: sharedpreferencetoken
     private var token: String? = null
     private lateinit var adapter: storyadapter
-
     private lateinit var sstoryviewmodel: storyviewmodel
+
+    private lateinit var uploadLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,7 @@ class story_actifity : AppCompatActivity() {
 
         sharedpreferencetoken = sharedpreferencetoken(this)
         token = sharedpreferencetoken.getToken()
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (!token.isNullOrEmpty()) {
@@ -75,28 +79,45 @@ class story_actifity : AppCompatActivity() {
             }
         }
 
+        uploadLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Refresh the data
+                token?.let {
+                    sstoryviewmodel.getStories(it).observe(this) { pagingData ->
+                        adapter.submitData(lifecycle, pagingData)
+                    }
+                }
+            }
+        }
+
         binding.fabAdd.setOnClickListener {
-            startActivity(Intent(this@story_actifity, Upload_story::class.java))
+            val intent = Intent(this@story_actifity, Upload_story::class.java)
+            uploadLauncher.launch(intent)
         }
 
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.maps -> {
-                    Log.d("MenuClick", "Map menu item clicked")
                     startActivity(Intent(this, MapsActivity::class.java))
                     true
                 }
                 R.id.logOut -> {
-                    Log.d("MenuClick", "Log out menu item clicked")
                     val intent = Intent(this@story_actifity, WelcomeActivity::class.java)
                     sharedpreferencetoken.clearData()
                     startActivity(intent)
                     finish()
                     true
                 }
-                else -> {
-                    false
-                }
+                else -> false
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        token?.let {
+            sstoryviewmodel.getStories(it).observe(this) { pagingData ->
+                adapter.submitData(lifecycle, pagingData)
             }
         }
     }

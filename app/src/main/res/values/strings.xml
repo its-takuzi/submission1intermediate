@@ -24,4 +24,5 @@
     <string name="title_activity_mapsactifity">mapsactifity</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="maps">maps</string>
+    <string name="eror">eror bang</string>
 </resources>

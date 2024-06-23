@@ -1,5 +1,7 @@
 package com.dicoding.picodiploma.loginwithanimation.view.upload
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.activity.viewModels
@@ -34,6 +36,7 @@ class Upload_story : AppCompatActivity() {
     private lateinit var sharedpreferencetoken: sharedpreferencetoken
 
     private var currentImageUri: Uri? = null
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,40 +47,52 @@ class Upload_story : AppCompatActivity() {
         sharedpreferencetoken = sharedpreferencetoken(this)
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
-        binding.uploadButton.setOnClickListener{uploadImage()}
-
+        binding.uploadButton.setOnClickListener { uploadImage() }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun uploadImage() {
         currentImageUri?.let { uri ->
-            val imageFile = uriToFile(uri, this).reduceFileImage()
-            Log.d("Image File", "showImage: ${imageFile.path}")
-            val description = binding.inputEditText.text.toString()
-            showLoading(true)
+            try {
+                val imageFile = uriToFile(uri, this).reduceFileImage()
+                Log.d("Image File", "Path: ${imageFile.path}")
+                val description = binding.inputEditText.text.toString()
 
-            val requestBody = description.toRequestBody("text/plain".toMediaType())
-            val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-            val multipartBody = MultipartBody.Part.createFormData(
-                "photo",
-                imageFile.name,
-                requestImageFile
-            )
+                showLoading(true)
 
-            val t = sharedpreferencetoken.getToken().toString()
-            val token = "Bearer $t"
+                val requestBody = description.toRequestBody("text/plain".toMediaType())
+                val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+                val multipartBody = MultipartBody.Part.createFormData(
+                    "photo",
+                    imageFile.name,
+                    requestImageFile
+                )
 
-            lifecycleScope.launch {
-                try {
-                    val apiService = ApiConfig.getApiService()
-                    val successResponse = apiService.uploadImage(token, multipartBody, requestBody)
-                    successResponse.message?.let { showToast(it) }
-                    showLoading(false)
-                    finish()
-                } catch (e: HttpException) {
-                    showToast(e.message.toString())
-                    showLoading(false)
+                val token = "${sharedpreferencetoken.getToken().toString()}"
+
+                lifecycleScope.launch {
+                    try {
+                        val apiService = ApiConfig.getApiService()
+                        val successResponse = apiService.uploadImage(token, multipartBody, requestBody)
+                        successResponse.message?.let { showToast(it) }
+                        showLoading(false)
+                        val intent = Intent()
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
+                    } catch (e: HttpException) {
+                        Log.e("Upload Image", "HttpException: ${e.message}")
+                        showToast(e.message.toString())
+                        showLoading(false)
+                    } catch (e: Exception) {
+                        Log.e("Upload Image", "Exception: ${e.message}")
+                        showToast(e.message.toString())
+                        showLoading(false)
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e("Upload Image", "File Error: ${e.message}")
+                showToast(getString(R.string.eror))
+                showLoading(false)
             }
         } ?: showToast(getString(R.string.empty_image_warning))
     }
@@ -112,7 +127,7 @@ class Upload_story : AppCompatActivity() {
 
     private fun showImage() {
         currentImageUri?.let {
-            Log.d("Image URI", "showImage: $it")
+            Log.d("Image URI", "Uri: $it")
             binding.previewImageView.setImageURI(it)
         }
     }
@@ -130,10 +145,10 @@ class Upload_story : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-
     private fun showLoading(isLoading: Boolean) {
         binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
