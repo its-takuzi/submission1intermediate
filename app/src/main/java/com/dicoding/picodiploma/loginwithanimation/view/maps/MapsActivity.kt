@@ -55,7 +55,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         stories?.forEach { story  ->
            if (story.lat != null && story.lon != null){
-           val latLng = LatLng(story.lat, story.lon!!)
+           val latLng = LatLng(story.lat, story.lon)
                mMap.addMarker(MarkerOptions().position(latLng).title(story.name))
                boundBuilder.include(latLng)
            }
@@ -74,8 +74,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
 
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isIndoorLevelPickerEnabled = true

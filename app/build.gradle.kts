@@ -34,6 +34,9 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -67,4 +70,13 @@ dependencies {
     //maps
     implementation ("com.google.android.gms:play-services-maps:18.2.0")
     implementation ("androidx.paging:paging-runtime-ktx:3.3.0")
+
+    testImplementation ("org.mockito:mockito-core:3.12.4")
+    testImplementation ("org.mockito:mockito-inline:3.12.4")
+
+    testImplementation("androidx.arch.core:core-testing:2.1.0") // InstantTaskExecutorRule
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1") //TestDispatcher
+    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-inline:3.12.4")
+
 }

@@ -14,7 +14,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.sharedpreference.sharedp
 
 class StoryRepository(private val apiService: ApiService, private val token: String) {
 
-    fun getStory(token: String): LiveData<PagingData<ListStoryItem>> {
+    fun getStory(): LiveData<PagingData<ListStoryItem>> {
         return liveData {
             val pager = Pager(
                 config = PagingConfig(

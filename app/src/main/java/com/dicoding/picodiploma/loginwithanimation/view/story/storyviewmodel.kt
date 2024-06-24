@@ -8,7 +8,7 @@ import androidx.paging.cachedIn
 import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 
 class storyviewmodel(private val storyRepository: StoryRepository) : ViewModel() {
-    fun getStories(token : String): LiveData<PagingData<ListStoryItem>> {
-        return storyRepository.getStory(token).cachedIn(viewModelScope)
+    fun getStories(): LiveData<PagingData<ListStoryItem>> {
+        return storyRepository.getStory().cachedIn(viewModelScope)
     }
 }

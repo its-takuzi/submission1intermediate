@@ -74,16 +74,15 @@ class story_actifity : AppCompatActivity() {
         sstoryviewmodel = ViewModelProvider(this, factory)[storyviewmodel::class.java]
 
         token?.let {
-            sstoryviewmodel.getStories(it).observe(this) { pagingData ->
+            sstoryviewmodel.getStories().observe(this) { pagingData ->
                 adapter.submitData(lifecycle, pagingData)
             }
         }
 
         uploadLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                // Refresh the data
                 token?.let {
-                    sstoryviewmodel.getStories(it).observe(this) { pagingData ->
+                    sstoryviewmodel.getStories().observe(this) { pagingData ->
                         adapter.submitData(lifecycle, pagingData)
                     }
                 }
@@ -116,7 +115,7 @@ class story_actifity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         token?.let {
-            sstoryviewmodel.getStories(it).observe(this) { pagingData ->
+            sstoryviewmodel.getStories().observe(this) { pagingData ->
                 adapter.submitData(lifecycle, pagingData)
             }
         }
