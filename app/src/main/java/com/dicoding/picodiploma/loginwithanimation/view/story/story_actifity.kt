@@ -112,15 +112,6 @@ class story_actifity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        token?.let {
-            sstoryviewmodel.getStories().observe(this) { pagingData ->
-                adapter.submitData(lifecycle, pagingData)
-            }
-        }
-    }
-
     private fun setupView() {
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

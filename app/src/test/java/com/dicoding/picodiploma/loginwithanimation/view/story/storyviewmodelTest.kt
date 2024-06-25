@@ -64,7 +64,7 @@ class storyviewmodelTest{
 
         assertNotNull(differ.snapshot())
         assertEquals(dummyStoriesResponse.listStory.size, differ.snapshot().size)
-        assertEquals(dummyStoriesResponse.listStory[0].id, differ.snapshot()[0]?.id)
+        assertEquals(dummyStoriesResponse.listStory[0], differ.snapshot()[0])
     }
 
     @Test

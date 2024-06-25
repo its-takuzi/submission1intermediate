@@ -26,7 +26,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var viewModel: mapsViewModel
     private val boundBuilder = LatLngBounds.builder()
     private lateinit var sharedpreferencetoken: sharedpreferencetoken
-    private var token: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +33,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedpreferencetoken = sharedpreferencetoken(this)
-        token = sharedpreferencetoken.getToken()
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        sharedpreferencetoken = sharedpreferencetoken(this)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        val factory = ViewModelFactory.getInstance(application, token!!)
+        val token = "${sharedpreferencetoken.getToken().toString()}"
+
+        val factory = ViewModelFactory.getInstance(application, token)
         viewModel = ViewModelProvider(this,factory)[(mapsViewModel::class.java)]
 
         viewModel.story.observe(this){stories ->
@@ -54,12 +53,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.clear()
 
         stories?.forEach { story  ->
-           if (story.lat != null && story.lon != null){
-           val latLng = LatLng(story.lat, story.lon)
-               mMap.addMarker(MarkerOptions().position(latLng).title(story.name))
-               boundBuilder.include(latLng)
-           }
+            if (story.lat != null && story.lon != null){
+                val latLng = LatLng(story.lat, story.lon)
+                mMap.addMarker(MarkerOptions().position(latLng).title(story.name))
+                boundBuilder.include(latLng)
+            }
         }
+
 
         val bounds : LatLngBounds = boundBuilder.build()
         mMap.animateCamera(
@@ -74,6 +74,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        // Add a marker in Sydney and move the camera
 
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isIndoorLevelPickerEnabled = true
@@ -104,4 +106,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
+    private val boundsBuilder = LatLngBounds.Builder()
 }

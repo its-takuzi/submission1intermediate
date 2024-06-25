@@ -2,7 +2,6 @@ package com.dicoding.picodiploma.loginwithanimation.view.maps
 
 import android.app.Application
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,7 +34,7 @@ class mapsViewModel (application: Application) : ViewModel(){
 
     fun showStory(token: String?) {
         _isloading.value = true
-        val client = ApiConfig.getApiService().getStoriesWithLocation("Bearer $token")
+        val client = ApiConfig.getApiService().getStoriesWithLocation(token)
         client.enqueue(object : Callback<StoryListResponse> {
             override fun onResponse(call: Call<StoryListResponse>, response: Response<StoryListResponse>) {
                 _isloading.value = false
